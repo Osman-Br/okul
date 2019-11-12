@@ -1,0 +1,8 @@
+dizi = [1,2,3]
+dizi.select { |e|
+if e == 3
+puts "#{e} sayısı dizide var"
+end
+}
+
+p %w(meryem durmus busra elif fatma).select {|e| e.include? "a"}
