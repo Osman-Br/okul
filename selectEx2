@@ -1,0 +1,4 @@
+meyveler = %w(elma portakal muz)
+puts meyveler.select.with_index {
+|kelime, indis| indis.even?
+}
