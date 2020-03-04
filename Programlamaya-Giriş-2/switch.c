@@ -44,7 +44,7 @@ int main( void )
   }
   else
   {
-   printf("\nA character %d times entered\n",A);
+   printf("\nA character entered %d times \n",A);
   }
   if(B == 0)
   {
@@ -52,7 +52,7 @@ int main( void )
   }
   else
   {
-   printf("\nB character %d times entered\n",B);
+   printf("\nB character entered %d times \n",B);
   }
   if(C == 0)
   {
@@ -60,18 +60,7 @@ int main( void )
   }
   else
   {
-   printf("\nC character %d times entered\n",C);
+   printf("\nC character entered %d times\n",C);
   }
-
-.
-
-
-
-
-
-
-
-
-
  return 0;
 }
