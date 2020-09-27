@@ -1,2 +1,2 @@
 # okul
-Üniversite ile alakalı olan 
+Üniversite ders kodları
