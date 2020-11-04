@@ -1,0 +1,148 @@
+#include<stdio.h>
+
+void ekle(int ogrenciNumarasi, int ogrenciNotu, int* yPointer, int ogrenciListesi[15][3]); //bu fonksiyon ogrenci bilgilerini notlari buyukten kucuge siralanacak sekilde bir diziye atiyor
+void sil(int*yPointer, int index, int ogrenciListesi[15][3]);              //bu fonksiyon indisi verilen ogrenciyi diziden siliyor
+void degistir(int index, int verilenNot, int ogrenciListesi[15][3]);           //bu fonksiyon indisi verilen ogrencinin not bilgisini guncelliyor
+void yazdir(int verilenNot, int ogrenciListesi[15][3]);                      //bu fonksiyon belirlenen notun ustundeki ogrencileri konsola yazdiriyor
+
+int main( void )
+{
+    int ogrenciListesi[15][3] = {0};        //ogrenci bilgilerinin saklandıgı dizi
+    int y = 0;                              //ogrenciListesi dizisinin güncel boyutunu taşıyan değişken
+    int* yPointer = &y;
+
+    ekle(18060311, 40, yPointer,ogrenciListesi);     //listedeki ogrenci bilgileri ogrenciListesi dizisine ekleniyor
+    ekle(20060045, 50, yPointer,ogrenciListesi);
+    ekle(19061091, 75, yPointer,ogrenciListesi);
+    ekle(20060134, 90, yPointer,ogrenciListesi);
+    ekle(20060678, 40, yPointer,ogrenciListesi);
+    ekle(18061086, 75, yPointer,ogrenciListesi);
+    ekle(20060032, 50, yPointer,ogrenciListesi);
+    ekle(20060067, 60, yPointer,ogrenciListesi);
+    ekle(19060456, 60, yPointer,ogrenciListesi);
+    ekle(18060245, 75, yPointer,ogrenciListesi);
+    ekle(20060110, 40, yPointer,ogrenciListesi);
+    ekle(20060234, 90, yPointer,ogrenciListesi);
+    ekle(20060141, 60, yPointer,ogrenciListesi);
+    ekle(20060011, 50, yPointer,ogrenciListesi);
+    ekle(20060012, 60, yPointer,ogrenciListesi);
+    
+    yazdir(10,ogrenciListesi);
+
+    return 1;
+}
+void ekle(int ogrenciNumarasi, int ogrenciNotu,int* yPointer, int ogrenciListesi[15][3]){
+   int i = 0;                                               //bu degisken eklenecek olan ogrenci bilgilerinin nereye konulacagi bilgisini tasiyor
+       for(i = 0 ; i < *yPointer ; i++){                         //bu dongü ve altindaki if deyimi eklenen not ile daha onceden eklenmis olan notlarin karsılastırılmasini sagliyor
+           if(ogrenciNotu < ogrenciListesi[i][1]){
+           }else if(ogrenciNotu == ogrenciListesi[i][1]){        //bu satir ve altindaki if deyimi notlar esit ise numaralarin kucukten buyuge siralanmasini sagliyor
+               if(ogrenciNumarasi > ogrenciListesi[i][0]) {
+
+               }else{
+                   break;
+               }
+           } else{
+               break;
+           }
+       }
+       int z = 14;
+       while(i < z){                                   //bu dongu ve altindaki kod blogu eklenecek olan ogrencinin sagindaki elemanlari saga kaydiriyor
+           ogrenciListesi[z][0] = ogrenciListesi[z-1][0];
+           ogrenciListesi[z][1] = ogrenciListesi[z-1][1];
+           ogrenciListesi[z][2] = ogrenciListesi[z-1][2];
+           z--;
+       }
+       ogrenciListesi[z][0] =  ogrenciNumarasi;   //bu kod blogu eklenecek olan ogrenciyi dizide belirlenen yere atiyor
+       ogrenciListesi[z][1] =  ogrenciNotu;
+       ogrenciListesi[z][2] =  *yPointer;
+
+       *yPointer += 1;                        //bu satir güncel dizi boyutunu artiriyor
+}
+void sil(int*yPointer, int index, int ogrenciListesi[15][3]){
+    int i;
+    for(i=0; i<14 ; i++)           //bu dongu sirali olan dizide secilen indise sahip elemani buluyor
+    {
+        if(ogrenciListesi[i][2] == index){
+            break;
+        }
+    }
+    while(i < 14)          //secilen indise sahip elemanin sagindaki elemanlar sola kaydirilarak o indisin bilgisi siliniyor
+    {
+        ogrenciListesi[i][0] = ogrenciListesi[i+1][0];
+        ogrenciListesi[i][1] = ogrenciListesi[i+1][1];
+        ogrenciListesi[i][2] = ogrenciListesi[i+1][2];
+        i++;
+    }
+    *yPointer -= 1;     //eleman cikarildigi icin guncel dizi boyutu 1 azaltiliyor
+}
+void degistir(int index, int verilenNot, int ogrenciListesi[15][3]){
+    int i;
+    int rIndex;
+    for(rIndex=0; rIndex<14 ; rIndex++)           //bu dongu sirali olan dizide secilen indise sahip elemani buluyor
+    {
+        if(ogrenciListesi[rIndex][2] == index){
+            break;
+        }
+    }
+    int z = ogrenciListesi[rIndex][0];
+
+
+    if(verilenNot > ogrenciListesi[rIndex][1]){ //eger degistirilen not oncekinden buyukse dizide o elemanin solundaki elemanlarla karsilastirma yapiliyor
+        i = rIndex;
+        while(verilenNot >= ogrenciListesi[rIndex][1] && rIndex!=0) {
+            if(verilenNot == ogrenciListesi[rIndex][1] && ogrenciListesi[i][0] < ogrenciListesi[rIndex][0]){
+                rIndex--;
+            }else if(verilenNot>ogrenciListesi[rIndex][1]){
+                rIndex--;
+            }else{
+                break;                         //eger degistirilen not oncekilerden buyukse veya ayni nota sahip ogrenciler arasinda numarasi digerleriyle birlikte kucukten buyuge siralanmissa donguden cikiliyor
+            }                                  //boylece notu degistirilen ogrencinin dizide bulunmasi gereken indis bulunuyor.
+        }
+        while(i > rIndex){                                   //bu dongude degistirilen notun bulunmasi gereken yerden, degistirilen notun onceki bulundugu yere kadar olan kismi saga kaydiriyor
+            ogrenciListesi[i][0] = ogrenciListesi[i-1][0];
+            ogrenciListesi[i][1] = ogrenciListesi[i-1][1];
+            ogrenciListesi[i][2] = ogrenciListesi[i-1][2];
+            i--;
+        }
+        ogrenciListesi[rIndex][0] = z;               //en sonda degistirilen not guncel yerine ataniyor
+        ogrenciListesi[rIndex][1] = verilenNot;
+        ogrenciListesi[rIndex][2] = index;
+    }else{                                    //eger degistirilen not oncekinden buyukse dizide o elemanin sagindaki elemanlarla karsilastirma yapiliyor
+        i = rIndex;
+        while(verilenNot <= ogrenciListesi[rIndex][1] && rIndex!= 14){
+            if(verilenNot == ogrenciListesi[rIndex][1] && ogrenciListesi[i][0] < ogrenciListesi[rIndex][0])
+            {
+                rIndex++;
+            }else if(verilenNot < ogrenciListesi[rIndex][1]){
+                rIndex++;
+            }else{
+                break;                                          //eger degistirilen not oncekilerden buyukse veya ayni nota sahip ogrenciler arasinda numarasi digerleriyle birlikte kucukten buyuge siralanmissa donguden cikiliyor
+            }                                          //bu sayede notu degistirilen ogrencinin dizide bulunmasi gereken indis bulunuyor.
+        }
+        while(i < rIndex){                                     //bu dongude degistirilen notun onceki bulundugu yerden, o notun degistirildikten sonraki bulundugu yere kadar olan kisim sola kaydiriliyor.
+            ogrenciListesi[i][0] = ogrenciListesi[i+1][0];
+            ogrenciListesi[i][1] = ogrenciListesi[i+1][1];
+            ogrenciListesi[i][2] = ogrenciListesi[i+1][2];
+            i++;
+        }
+        ogrenciListesi[rIndex][0] = z;          //en sonunda degistirilen not guncel yerine ataniyor
+        ogrenciListesi[rIndex][1] = verilenNot;
+        ogrenciListesi[rIndex][2] = index;
+    }
+}
+void yazdir(int verilenNot, int ogrenciListesi[15][3])
+{
+    int i;
+    for(i = 0; i < 15 ; i++)                                           //bu dongude verilen nottan buyuk en sonuncu elemanin indeksini buluyor
+    {
+        if(ogrenciListesi[i][1] <= verilenNot)
+        {
+            break;
+        }
+    }
+    int y;
+    for(y = 0 ; y < i ; y++) //bu dongude listenin her elemanını yazdırıyor
+    {
+        printf("ogrenci; numarasi: %d, notu: %d, indeksi: %d \n", ogrenciListesi[y][0],  ogrenciListesi[y][1], ogrenciListesi[y][2]); //siralanan elemanlari en
+    }
+}
