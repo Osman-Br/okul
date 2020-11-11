@@ -8,7 +8,6 @@ struct indeksTablosu
     int deger;
     char isim[7];
     struct indeksTablosu* sonraki;
-    struct indeksTablosu* onceki;
 };
 struct isimIndeksTablosu
 {
@@ -16,7 +15,6 @@ struct isimIndeksTablosu
     int deger;
     char isim[7];
     struct isimIndeksTablosu* sonraki;
-    struct isimIndeksTablosu* onceki;
 };
 struct musteri
 {
@@ -24,36 +22,44 @@ struct musteri
     int fatura;
     int indeks;
     struct musteri* sonraki;
-    struct musteri* onceki;
 };
 
+//---------------------------------------------------ODEVDE ISTENEN FONKSIYONLAR--------------------------------------------------------------------------
 void musteri_ekle(struct musteri* ilk, char musteriIsmi[7], int fatura, int* listeBoyutu, struct indeksTablosu* fatura_T, struct isimIndeksTablosu* isim_T); //verilen degerleri musteri listesine ekler
 void isme_gore_ekle(struct musteri* ilk, char musteriIsmi[7], int fatura, int* listeBoyutu, struct indeksTablosu* fatura_T, struct isimIndeksTablosu* isim_T);  //verilen degerleri isimler alafabetik sirada olacak sekilde musteri listesine ekler
 void faturaya_gore_ekle(struct musteri* ilk, char musteriIsmi[7], int fatura, int* listeBoyutu, struct indeksTablosu* fatura_T, struct isimIndeksTablosu* isim_T); //verilen degerleri faturalar buyukten kucuge olacak sekilde musteri listesine ekler
 void harfe_gore_yazdir(char harf, struct isimIndeksTablosu* isim_T);              //musteri ismi harf degiskeniyle baslayan elemanlari yazdirir
 void faturaya_gore_yazdir(int fatura, struct  indeksTablosu* fatura_T);             //musteri faturasi, fonksiyona verilen fatura degiskeninden buyuk olan elemanlari yazdirir
 
-
+//-------------------------------------------------YARDIMCI FONKSIYONLAR--------------------------------------------------------------------------
 void fatura_T_sirala(struct indeksTablosu* fatura_T);                   //fatura_T listesini faturalar buyukten kucuge olacak sekilde siralar
 void isim_T_sirala(struct isimIndeksTablosu* fatura_T);                  //isim_T listesini isimler alfabetik sirada olacak sekilde siralar
 void degerYerDegistir(struct indeksTablosu* a,struct indeksTablosu* b);             //verilen liste elemanlarının deger degiskenlerini yer değiştirir
 void isimYerDegistir(struct isimIndeksTablosu* a,struct isimIndeksTablosu* b);        //verilen liste elemanlarının isim degiskenlerini yer değiştirir
 
+
+void bastir(struct musteri* ilk){
+    struct musteri *a = ilk->sonraki;
+    while(a != NULL)
+    {
+        printf("isim:%s,fatura:%d,indeks:%d\n",a->musteriIsmi,a->fatura,a->indeks);
+        a = a->sonraki;
+    }
+}   //musteri listesini bastirir
+
 int main() {
     int musteri_Liste_Boyutu = 0;
 
     struct isimIndeksTablosu* isim_T;
-    isim_T = (struct isimIndeksTablosu*)malloc(sizeof(struct isimIndeksTablosu));       //isim indeks tablosunun başını belirler
+    isim_T = (struct isimIndeksTablosu*)malloc(sizeof(struct isimIndeksTablosu));       //isim indeks tablosunun başı belirleniyor
     isim_T->sonraki = NULL;
-    isim_T->onceki = NULL;
 
     struct indeksTablosu* fatura_T;
-    fatura_T = (struct indeksTablosu*)malloc(sizeof(struct indeksTablosu));            //fatura indeks tablosunun başını belirler
+    fatura_T = (struct indeksTablosu*)malloc(sizeof(struct indeksTablosu));            //fatura indeks tablosunun başı belirleniyor
     fatura_T->sonraki = NULL;
-    fatura_T->onceki = NULL;
 
     struct musteri* ilk;
-    ilk = (struct musteri*)malloc(sizeof(struct musteri));                        //musteri bilgilerinin bulundugu listenin basını belirler
+    ilk = (struct musteri*)malloc(sizeof(struct musteri));                        //musteri bilgilerinin bulundugu listenin basını belirliyor
     ilk->sonraki = NULL;
 
 
@@ -75,40 +81,63 @@ int main() {
     fatura_T_sirala(fatura_T);                                                              //eklenen elemanlar siralaniyor
     isim_T_sirala(isim_T);
 
-    isme_gore_ekle(ilk,"Ali",700,&musteri_Liste_Boyutu,fatura_T,isim_T);
-    faturaya_gore_ekle(ilk,"Ali",950,&musteri_Liste_Boyutu,fatura_T,isim_T);
-    struct musteri *a = ilk->sonraki;
-    while(a != NULL)
-    {
-        printf("isim:%s,fatura:%d,indeks:%d\n",a->musteriIsmi,a->fatura,a->indeks);
-        a = a->sonraki;
-    }
-    harfe_gore_yazdir('A',isim_T);
-    faturaya_gore_yazdir(900,fatura_T);
-    printf("%d",strcmp("a","ahmet"));
+    isme_gore_ekle(ilk,"Ali",700,&musteri_Liste_Boyutu,fatura_T,isim_T);   //listeye alfabetik sirada olacak sekilde Ali adinda musteri ekleniyor
+    faturaya_gore_ekle(ilk,"Ali",950,&musteri_Liste_Boyutu,fatura_T,isim_T);    //listeye buyukten kucuge olacak sekilde 950 faturaya sahip eleman ekleniyor
+    bastir(ilk);                             //musteri listesi bastiriliyor
+    harfe_gore_yazdir('A',isim_T);            //a harfi ile baslayan musteriler bastiriliyor
+    faturaya_gore_yazdir(900,fatura_T);        //900 üstü faturaya sahip musteriler bastiriliyor
     return 0;
+
+    /*Console:
+    isim:Ahmet,fatura:100,indeks:0
+isim:Bilal,fatura:1000,indeks:1
+isim:Cemal,fatura:600,indeks:2
+isim:Adem,fatura:600,indeks:3
+isim:Yasin,fatura:350,indeks:4
+isim:Esin,fatura:270,indeks:5
+isim:Emel,fatura:410,indeks:6
+isim:Mustafa,fatura:750,indeks:7
+isim:Ayten,fatura:600,indeks:8
+isim:Ceylan,fatura:1000,indeks:9
+isim:Nesrin,fatura:900,indeks:10
+isim:Bekir,fatura:850,indeks:11
+isim:Emin,fatura:790,indeks:12
+isim:Hakan,fatura:610,indeks:13
+isim:Hatice,fatura:550,indeks:14
+isim Ali 700
+isim Adem 100
+isim Ahmet 1000
+isim Ayten 600
+isim Ahmet 1000
+isim Bilal 1000
+isim Ali 950
+isim Cemal 900
+
+Process finished with exit code 0
+*/
+
 }
 
 void musteri_ekle(struct musteri* ilk, char musteriIsmi[7], int fatura, int* listeBoyutu, struct indeksTablosu* fatura_T, struct isimIndeksTablosu* isim_T) //verilen fatura ve isim degiskenlerini listelere ekler
 {
     struct musteri* pointer = (struct musteri*)malloc(sizeof(struct musteri));
-    struct indeksTablosu* pointer2 = (struct indeksTablosu*)malloc(sizeof(struct indeksTablosu));
+    struct indeksTablosu* pointer2 = (struct indeksTablosu*)malloc(sizeof(struct indeksTablosu));    //yeni eleman için bellekte yer açılıyor
     struct isimIndeksTablosu* pointer3 = (struct isimIndeksTablosu*)malloc(sizeof(struct isimIndeksTablosu));
 
     pointer->fatura = fatura;
-    pointer2->deger = fatura;
+    pointer2->deger = fatura;                //bellekte yer acılan yere fatura degiskeni atanıyor
     pointer3->deger = fatura;
 
     strcpy(pointer->musteriIsmi,musteriIsmi);
-    strcpy(pointer2->isim,musteriIsmi);
+    strcpy(pointer2->isim,musteriIsmi);           //bellekte yer acılan yere isim degiskeni atanıyor
     strcpy(pointer3->isim,musteriIsmi);
 
     pointer->sonraki = NULL;
-    pointer2->sonraki = NULL;
+    pointer2->sonraki = NULL;           //bellekte yer acılan yerden sonraki yer null atanıyor
     pointer3->sonraki = NULL;
 
     pointer->indeks = *listeBoyutu;
-    pointer2->indeks = *listeBoyutu;
+    pointer2->indeks = *listeBoyutu;     //indeksler atanıyor
     pointer3->indeks = *listeBoyutu;
 
     struct musteri *a = ilk;
@@ -120,22 +149,13 @@ void musteri_ekle(struct musteri* ilk, char musteriIsmi[7], int fatura, int* lis
         //a->sonraki = NULL;
         //a->indeks = *listeBoyutu;
    // }else {
-        while (a->sonraki != NULL) {
-            struct musteri *once = a;
-            struct indeksTablosu *once2 = c;
-            struct isimIndeksTablosu *once3 = d;
-
+        while (a->sonraki != NULL) {           //musteri listesinin sonuna geliniyor
             a = a->sonraki;
-            a->onceki = once;
-
             d = d->sonraki;
-            d->onceki = once3;
-
             c = c->sonraki;
-            c->onceki = once2;
         }
    // }
-        a->sonraki = pointer;
+        a->sonraki = pointer;       //musteri listesinin sonundan sonraki eleman olarak yeni ekledigimiz isaretci atanıyor
         d->sonraki = pointer3;
         c->sonraki = pointer2;
         *listeBoyutu += 1;
@@ -143,7 +163,7 @@ void musteri_ekle(struct musteri* ilk, char musteriIsmi[7], int fatura, int* lis
 void isme_gore_ekle(struct musteri* ilk, char musteriIsmi[7], int fatura, int* listeBoyutu, struct indeksTablosu* fatura_T, struct isimIndeksTablosu* isim_T){
     struct isimIndeksTablosu* isimP = isim_T->sonraki;
     struct isimIndeksTablosu* isimP_once = isim_T;
-    while(isimP->sonraki != NULL){
+    while(isimP->sonraki != NULL){                //bu dongu yeni eklenecek olan elemanin listedeki yerini buluyor
         if(strcmp(musteriIsmi,isimP->isim)>0){
             break;
         }else{
@@ -151,7 +171,8 @@ void isme_gore_ekle(struct musteri* ilk, char musteriIsmi[7], int fatura, int* l
             isimP_once = isimP_once->sonraki;
         }
     }
-    struct isimIndeksTablosu* yeni = (struct isimIndeksTablosu*)malloc(sizeof(struct isimIndeksTablosu));
+
+    struct isimIndeksTablosu* yeni = (struct isimIndeksTablosu*)malloc(sizeof(struct isimIndeksTablosu)); //bu kod blogu listeye eklenecek olan elemani yerine koyuyor(isaretcileri atiyor) ve elemandaki degiskenlerin atamalarini yapiyor
     strcpy(yeni->isim,musteriIsmi);
     yeni->indeks = *listeBoyutu;
     yeni->deger = fatura;
@@ -162,7 +183,7 @@ void isme_gore_ekle(struct musteri* ilk, char musteriIsmi[7], int fatura, int* l
 void faturaya_gore_ekle(struct musteri* ilk, char musteriIsmi[7], int fatura, int* listeBoyutu, struct indeksTablosu* fatura_T, struct isimIndeksTablosu* isim_T){
     struct indeksTablosu* faturaP = fatura_T->sonraki;
     struct indeksTablosu* faturaP_once = fatura_T;
-    while(faturaP->sonraki != NULL){
+    while(faturaP->sonraki != NULL){      //bu dongu eklenecek elemanin faturalar buyukten kucuge olacak sekilde listedeki yerini buluyor
         if(fatura > faturaP->deger){
             break;
         }else{
@@ -170,7 +191,7 @@ void faturaya_gore_ekle(struct musteri* ilk, char musteriIsmi[7], int fatura, in
             faturaP_once = faturaP_once->sonraki;
         }
     }
-    struct indeksTablosu* yeni = (struct indeksTablosu*)malloc(sizeof(struct indeksTablosu));
+    struct indeksTablosu* yeni = (struct indeksTablosu*)malloc(sizeof(struct indeksTablosu));  //listeye eklenecek olan eleman listedeki yerine koyuluyor(isaretciler ataniyor) ve icindeki degiskenlerin atamasi yapiliyor
     yeni->indeks = *listeBoyutu;
     yeni->deger = fatura;
     strcpy(yeni->isim,musteriIsmi);
@@ -180,7 +201,7 @@ void faturaya_gore_ekle(struct musteri* ilk, char musteriIsmi[7], int fatura, in
 }
 void harfe_gore_yazdir(char harf, struct isimIndeksTablosu* isim_T){
     struct isimIndeksTablosu* isimP = isim_T->sonraki;
-    while(isimP->sonraki != NULL){
+    while(isimP->sonraki != NULL){        //listede musteri isimleri verilen harfle baslamayan ilk elemani isaretliyor
         if(isimP->isim[0] != harf)
         {
             break;
@@ -189,21 +210,21 @@ void harfe_gore_yazdir(char harf, struct isimIndeksTablosu* isim_T){
         }
     }
     struct isimIndeksTablosu* l = isim_T->sonraki;
-    while(isimP != l){
+    while(isimP != l){                                      //listede isaretlenen yere kadar olan elemanlar bastiriliyor
         printf("isim %s %d\n",l->isim,l->deger);
         l = l->sonraki;
     }
 }
 void faturaya_gore_yazdir(int fatura, struct  indeksTablosu* fatura_T){
     struct indeksTablosu* faturaP = fatura_T->sonraki;
-    while(faturaP->sonraki != NULL){
+    while(faturaP->sonraki != NULL){         //bu dongunun icinde listede istenen faturadan daha dusuk faturaya sahip ilk eleman bulunuyor
         if(fatura > faturaP->deger){
             break;
         }else{
             faturaP = faturaP->sonraki;
         }
     }
-    struct indeksTablosu* z = fatura_T->sonraki;
+    struct indeksTablosu* z = fatura_T->sonraki;  //bulunan elemana kadar olan tum elemanlar bastiriliyor
     while(z != faturaP){
         printf("isim %s %d\n",z->isim,z->deger);
         z = z->sonraki;
@@ -213,7 +234,7 @@ void faturaya_gore_yazdir(int fatura, struct  indeksTablosu* fatura_T){
 void degerYerDegistir(struct indeksTablosu* a, struct indeksTablosu* b){
     int c = a->deger;
     int d = a->indeks;
-    a->deger = b->deger;              //verilen indeks tablosu elemanlarinin degerlerini ve indeksleri yer degistirir
+    a->deger = b->deger;              //bu fonksiyon verilen indeks tablosu elemanlarinin degerlerini ve indeksleri yer degistirir
     a->indeks = b->indeks;
     b->deger = c;
     b->indeks = d;
@@ -222,7 +243,7 @@ void isimYerDegistir(struct isimIndeksTablosu* a, struct isimIndeksTablosu* b){
     char c[7];
     int d = a->indeks;
     int i;
-    for(i = 0 ; i < 7 ; i++){             //verilen indekst tablosu elemanlarinin isimlerini ce indekslerini yer degistiri
+    for(i = 0 ; i < 7 ; i++){             //bu fonksiyon verilen indeks tablosu elemanlarinin isimlerini ve indekslerini yer degistiriyor
         c[i] = a->isim[i];
     }
     a->indeks = b->indeks;
@@ -239,8 +260,8 @@ void fatura_T_sirala(struct indeksTablosu* fatura_T){
     struct indeksTablosu* pointer = fatura_T->sonraki;
     struct indeksTablosu* pointerD = fatura_T;
 
-    while(pointerD->sonraki != NULL) {
-        pointer = fatura_T->sonraki;
+    while(pointerD->sonraki != NULL) {    //bu fonksiyonda kabarcik siralama ile elemanlar bir sonraki ile karsilastirilarak istenilen sirada degilse yer degistiriliyor
+        pointer = fatura_T->sonraki;          //bu islem liste sirali hale gelene kadar devam ettiriliyor
         while (pointer->sonraki != NULL) {
             if (pointer->deger < pointer->sonraki->deger) {
                 degerYerDegistir(pointer, pointer->sonraki);
@@ -249,12 +270,12 @@ void fatura_T_sirala(struct indeksTablosu* fatura_T){
         }
         pointerD = pointerD->sonraki;
     }
-}
+}  //fatura indeks tablosunu siralar
 void isim_T_sirala(struct isimIndeksTablosu* isim_T){
     struct isimIndeksTablosu* pointer = NULL;
     struct isimIndeksTablosu* pointerD = isim_T->sonraki;
 
-    while(pointerD->sonraki != NULL) {
+    while(pointerD->sonraki != NULL) {   //bu fonksiyonda da yine kabarcik siralamadaki gibi bitişik elemanlar birbiri ile karsilastirilarak istenen siraya getiriliyor
         pointer = isim_T->sonraki;
         while (pointer->sonraki != NULL) {
             if (strcmp(pointer->isim,(pointer->sonraki)->isim) > 0) {
@@ -264,4 +285,5 @@ void isim_T_sirala(struct isimIndeksTablosu* isim_T){
         }
         pointerD = pointerD->sonraki;
     }
-}
+}  // isim indeks tablosunu siralar
+
