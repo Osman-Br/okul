@@ -1,0 +1,1 @@
+puts %w[ant bear cat].all?{|word| word.length >= 4}

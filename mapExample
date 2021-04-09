@@ -1,0 +1,3 @@
+sayilar = [18,22,45,65,76]
+sonuclar = sayilar.map{|elemanlar| elemanlar + 1}
+puts sonuclar
